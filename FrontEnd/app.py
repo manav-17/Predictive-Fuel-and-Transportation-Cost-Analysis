@@ -9,9 +9,11 @@ warnings.filterwarnings('ignore', category=UserWarning)
 app = Flask(__name__)
 CORS(app)
 
-model_cost = joblib.load('Regression_model.pkl')
-model_risk = joblib.load('Classification-Model.pkl')
-fuel_df = pd.read_csv('fuel_prices.csv')
+import os
+model_cost = joblib.load(os.path.join(os.path.dirname(__file__), 'Regression_model.pkl'))
+model_risk = joblib.load(os.path.join(os.path.dirname(__file__),'Classification-model.pkl'))
+import os
+fuel_df = pd.read_csv(os.path.join(os.path.dirname(__file__), 'fuel_prices.csv'))
 fuel_df['Date'] = pd.to_datetime(fuel_df['Date'])
 
 CITY_COORDS = {
@@ -129,6 +131,14 @@ def predict():
     except Exception as e:
         print(f"An error occurred: {e}")
         return jsonify({"error": str(e)}), 400
+import os 
+@app.route('/')
+def index():
+    return open(os.path.join(os.path.dirname(__file__), 'index.html')).read()
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
+
+
+
